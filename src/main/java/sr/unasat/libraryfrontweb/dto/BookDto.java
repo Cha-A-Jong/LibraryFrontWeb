@@ -13,7 +13,7 @@ public class BookDto {
     private String title;
     private String subtitle;
     private Genre genre;
-    public Author author;
+    private Author author;
     private BorrowReceipt borrowReceipt;
     private Set<Member> members;
 

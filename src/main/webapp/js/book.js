@@ -1,85 +1,113 @@
-// Define endpoint URLs
-const BOOK_LIST_URL = 'http://localhost:8081/LibraryFrontWeb_war_exploded/api/book/bookList';
-const ADD_BOOK_URL = 'http://localhost:8081/LibraryFrontWeb_war_exploded/api/book/addBook';
-const DELETE_BOOK_URL = 'http://localhost:8081/LibraryFrontWeb_war_exploded/api/book/deleteBook';
-const UPDATE_BOOK_URL = 'http://localhost:8081/LibraryFrontWeb_war_exploded/api/book/update';
+function populateBookTable(books) {
+    var table = document.getElementById("book-table").getElementsByTagName("tbody")[0];
+    for (var i = 0; i < books.length; i++) {
+        var book = books[i];
+        var row = table.insertRow(i);
 
-// Function to send GET request and display list of books
-function displayBookList() {
-    fetch(BOOK_LIST_URL)
-        .then(response => response.json())
-        .then(books => {
-            let bookListHtml = '<ul>';
-            for (const book of books) {
-                bookListHtml += `<li>${book.title} by ${book.author} (${book.genre})`
-                bookListHtml += `<button onclick="displayEditForm(${book.id})">Edit</button>`;
-                bookListHtml += `<button onclick="deleteBook(${book.id})">Delete</button></li>`;
+        var idCell = row.insertCell(0);
+        idCell.innerHTML = book.id;
+
+        var isbnCell = row.insertCell(1);
+        isbnCell.innerHTML = book.isbn;
+
+        var titleCell = row.insertCell(2);
+        titleCell.innerHTML = book.title;
+
+        var subtitleCell = row.insertCell(3);
+        subtitleCell.innerHTML = book.subtitle;
+
+        //Add a new column for the delete button
+        var deleteCell = row.insertCell(4);
+        var deleButton = document.createElement("button");
+        deleButton.innerHTML = "Delete";
+        deleButton.onclick = (function() {
+            return function() {
+                console.log("Delete button clicked for book id: ", book.id);
+                deleteBook(book.id);
             }
-            bookListHtml += '</ul>';
-            document.getElementById('bookList').innerHTML = bookListHtml;
-        });
+        })(book.id);
+
+        deleteCell.appendChild(deleButton);
+    }
 }
 
-// Function to send POST request to add a book
-function addBook() {
-    const title = document.getElementById('title').value;
-    const author = document.getElementById('author').value;
-    const genre = document.getElementById('genre').value;
-    fetch(ADD_BOOK_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({title, author, genre})
-    })
-        .then(() => displayBookList());
+function getBooks() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://localhost:8081/LibraryFrontWeb_war_exploded/api/book/bookList");
+    xhr.onload = function () {
+        if (xhr.status == 200) {
+            var books = JSON.parse(xhr.responseText);
+            populateBookTable(books);
+        } else {
+            alert("Error loading books");
+        }
+    };
+    xhr.send();
 }
+getBooks();
 
-// Function to send DELETE request to delete a book
+function submitBookForm() {
+    var form = document.getElementById("book-form");
+    var isbn = document.getElementById("isbn").value;
+    var title = document.getElementById("title").value;
+    var subtitle = document.getElementById("subtitle").value;
+    var author = document.getElementById("author-id").value;
+    var genre = document.getElementById("genre-id").value;
+    var borrowReceipt = document.getElementById("borrow-receipt-id").value;
+    var members = [{"id": document.getElementById("member-id").value}];
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "http://localhost:8081/LibraryFrontWeb_war_exploded/api/book/addBook");
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.onload = function () {
+        if (xhr.status == 200) {
+            alert("Book added successfully!");
+            form.reset();
+        } else {
+            alert("Error adding book");
+        }
+    };
+
+    xhr.send(JSON.stringify({
+        "isbn": isbn,
+        "title": title,
+        "subtitle": subtitle,
+        "author": {"id": author},
+        "genre": {"id": genre},
+        "borrowReceipt": {"id": borrowReceipt},
+        "members": members
+    }));
+
+}
+var form = document.getElementById("book-form");
+form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    submitBookForm();
+});
+
 function deleteBook(id) {
-    fetch(`${DELETE_BOOK_URL}/${id}`, {
-        method: 'DELETE'
+    fetch(`http://localhost:8081/LibraryFrontWeb_war_exploded/api/book/deleteBook/${id}`, {
+        method: 'DELETE',
     })
-        .then(() => displayBookList());
-}
-
-// Function to display edit form for a book
-function displayEditForm(id) {
-    fetch(`${BOOK_LIST_URL}/${id}`)
-        .then(response => response.json())
-        .then(book => {
-            document.getElementById('editForm').innerHTML = `
-        <input type="hidden" id="bookId" value="${book.id}">
-        <label for="title">Title:</label>
-        <input type="text" id="title" value="${book.title}">
-        <label for="author">Author:</label>
-        <input type="text" id="author" value="${book.author}">
-        <label for="genre">Genre:</label>
-        <input type="text" id="genre" value="${book.genre}">
-        <button onclick="updateBook()">Save</button>
-      `;
-        });
-}
-
-// Function to send PUT request to update a book
-function updateBook() {
-    const id = document.getElementById('bookId').value;
-    const title = document.getElementById('title').value;
-    const author = document.getElementById('author').value;
-    const genre = document.getElementById('genre').value;
-    fetch(`${UPDATE_BOOK_URL}/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({title, author, genre})
-    })
-        .then(() => {
-            document.getElementById('editForm').innerHTML = '';
-            displayBookList();
+        .then(response => {
+            if (response.ok) {
+                alert(`Book with ID ${id} deleted successfully!`);
+                location.reload();
+            } else {
+                alert(`Error deleting book with ID ${id}`);
+            }
+        })
+        .catch(error => {
+            console.error(`Error deleting book with ID ${id}:`, error);
         });
 }
 
 
-// Display initial list of books
-displayBookList();
+
+
+
+
+
+
+
