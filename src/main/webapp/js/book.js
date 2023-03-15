@@ -133,19 +133,34 @@ function deleteBook(id) {
 
 }
 
-function updateBook(book) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("PUT", "http://localhost:8081/LibraryFrontWeb_war_exploded/api/book/update");
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.onload = function() {
-        if (xhr.status === 200 || xhr.status === 204) {
-            alert("Book updated successfully!");
-            location.reload();
-        } else {
-            alert("Error updating book");
-        }
+// Update Book
+function updateBook() {
+    var book = {
+        id: parseInt(document.getElementById('book-id').value),
+        isbn: document.getElementById('isbn').value,
+        title: document.getElementById('title').value,
+        subtitle: document.getElementById('subtitle').value,
+        genre: document.getElementById('genre-id').value,
+        authorId: parseInt(document.getElementById('author-id').value),
+        borrowReceiptId: parseInt(document.getElementById('borrow-receipt-id').value),
+        memberId: parseInt(document.getElementById('member-id').value)
     };
-    xhr.send(JSON.stringify(book));
+
+    fetch(`${url}/books/${book.id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(book)
+    })
+        .then(res => res.json())
+        .then(() => {
+            getBooks();
+            document.getElementById('book-form').reset();
+            document.getElementById('add-btn').style.display = 'block';
+            document.getElementById('update-btn').style.display = 'none';
+        })
+        .catch(err => console.log(err));
 }
 
 
