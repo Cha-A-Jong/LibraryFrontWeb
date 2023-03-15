@@ -1,6 +1,7 @@
-function populateMemberTable(member) {
+function populateMemberTable(members) {
+    console.log(members);
     var table = document.getElementById("member-table").getElementsByTagName("tbody")[0];
-    for (var i = 0; i < books.length; i++) {
+    for (var i = 0; i < members.length; i++) {
         var member = members[i];
         var row = table.insertRow(i);
 
@@ -22,7 +23,6 @@ function populateMemberTable(member) {
         var cbbidnumberCell = row.insertCell(5);
         cbbidnumberCell.innerHTML = member.cbbidnumber;
 
-
         //Add a new column for the delete button
         var deleteCell = row.insertCell(6);
         var deleButton = document.createElement("button");
@@ -30,7 +30,7 @@ function populateMemberTable(member) {
         deleButton.onclick = (function() {
             return function() {
                 console.log("Delete button clicked for member id: ", member.id);
-                deleteBook(member.id);
+                deleteMember(member.id);
             }
         })(member.id);
 
@@ -40,10 +40,10 @@ function populateMemberTable(member) {
 
 function getMembers() {
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", " http://localhost:8081/LibraryFrontWeb_war_exploded/api/member/memberList");
+    xhr.open("GET", "http://localhost:8081/LibraryFrontWeb_war_exploded/api/member/memberList");
     xhr.onload = function () {
         if (xhr.status == 200) {
-            var books = JSON.parse(xhr.responseText);
+            var members = JSON.parse(xhr.responseText);
             populateMemberTable(members);
         } else {
             alert("Error loading members");
@@ -51,9 +51,12 @@ function getMembers() {
     };
     xhr.send();
 }
-getMembers();
+window.onload = function() {
+    getMembers();
+};
 
-function submitBookForm() {
+
+function submitMemberForm() {
     var form = document.getElementById("member-form");
     var firstname = document.getElementById("firstname").value;
     var lastname = document.getElementById("lastname").value;
@@ -92,22 +95,4 @@ form.addEventListener("submit", function (event) {
     event.preventDefault();
     submitMemberForm();
 });
-
-function deleteMember(id) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("DELETE", "http://localhost:8081/LibraryFrontWeb_war_exploded/api/member/deleteMember/" + id);
-    xhr.onload = function () {
-        if (xhr.status === 200 || xhr.status === 204) {
-            alert("Member deleted successfully!");
-            location.reload();
-        } else {
-            alert("Error deleting Member");
-        }
-    };
-    console.log("DELETE request URL: ", xhr.responseURL);
-    console.log("DELETE request payload: ", id);
-    xhr.send(JSON.stringify({id: id}));
-    console.log("DELETE request sent.");
-
-}
 

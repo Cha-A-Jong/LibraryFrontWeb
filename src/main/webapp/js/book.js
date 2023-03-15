@@ -138,23 +138,32 @@ function deleteBook(bookId) {
 }
 
 
-function updateBook(book) {
-var xhr = new XMLHttpRequest();
-xhr.open("PUT", "http://localhost:8081/LibraryFrontWeb_war_exploded/api/book/updateBook/" + book.id);
-xhr.setRequestHeader("Content-Type", "application/json");
+function updateBook() {
+    const title = document.getElementById("update-title").value;
+    const author = document.getElementById("update-author").value;
+    const publisher = document.getElementById("update-publisher").value;
+    const category = document.getElementById("update-category").value;
+    const id = document.getElementById("update-id").value;
 
-xhr.onload = function () {
-    if (xhr.status == 200) {
-        alert("Book updated successfully!");
-        location.reload();
-    } else {
-        alert("Error updating book");
-    }
-};
+    const book = {
+        title: title,
+        author: author,
+        publisher: publisher,
+        category: category
+    };
 
-xhr.send(JSON.stringify({
-    "isbn": book.isbn,
-    "title": book.title,
-    "subtitle": book.subtitle
-}));
+    fetch(`http://localhost:8081/LibraryFrontWeb_war_exploded/api/book/update/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(book)
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            display_books();
+        })
+        .catch(error => console.error(error));
 }
+
