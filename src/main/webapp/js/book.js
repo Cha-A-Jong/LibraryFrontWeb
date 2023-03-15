@@ -29,35 +29,40 @@ function populateBookTable(books) {
                 editForm.elements["isbn"].value = book.isbn;
                 editForm.elements["title"].value = book.title;
                 editForm.elements["subtitle"].value = book.subtitle;
-                // Submit the form to update the book
-                editForm.onsubmit = function(event) {
-                    event.preventDefault();
-                    updateBook({
-                        "id": book.id,
-                        "isbn": editForm.elements["isbn"].value,
-                        "title": editForm.elements["title"].value,
-                        "subtitle": editForm.elements["subtitle"].value
-                    });
-                };
+                // Remove the event listener if it exists
+                editForm.removeEventListener("submit", handleEditFormSubmit);
+                // Add event listener to the submit button to update the book
+                editForm.addEventListener("submit", handleEditFormSubmit);
                 editForm.style.display = "block";
             }
         })(book.id);
 
         editCell.appendChild(editButton);
 
-        //Add a new column for the delete button
-        var deleteCell = row.insertCell(4);
-        var deleButton = document.createElement("button");
-        deleButton.innerHTML = "Delete";
-        deleButton.onclick = (function() {
+        // Add a new column for the delete button
+        var deleteCell = row.insertCell(5);
+        var deleteButton = document.createElement("button");
+        deleteButton.innerHTML = "Delete";
+        deleteButton.onclick = (function() {
             return function() {
                 console.log("Delete button clicked for book id: ", book.id);
                 deleteBook(book.id);
             }
         })(book.id);
 
-        deleteCell.appendChild(deleButton);
+        deleteCell.appendChild(deleteButton);
     }
+}
+function handleEditFormSubmit(event) {
+    event.preventDefault();
+    var editForm = document.getElementById("edit-book-form");
+    updateBook({
+        "id": editForm.elements["id"].value,
+        "isbn": editForm.elements["isbn"].value,
+        "title": editForm.elements["title"].value,
+        "subtitle": editForm.elements["subtitle"].value
+    });
+    editForm.style.display = "none";
 }
 
 function getBooks() {
@@ -115,9 +120,9 @@ form.addEventListener("submit", function (event) {
     submitBookForm();
 });
 
-function deleteBook(id) {
+function deleteBook(bookId) {
     var xhr = new XMLHttpRequest();
-    xhr.open("DELETE", "http://localhost:8081/LibraryFrontWeb_war_exploded/api/book/deleteBook/" + id);
+    xhr.open("DELETE", "http://localhost:8081/LibraryFrontWeb_war_exploded/api/book/deleteBook/" + bookId);
     xhr.onload = function () {
         if (xhr.status === 200 || xhr.status === 204) {
             alert("Book deleted successfully!");
@@ -127,51 +132,29 @@ function deleteBook(id) {
         }
     };
     console.log("DELETE request URL: ", xhr.responseURL);
-    console.log("DELETE request payload: ", id);
-    xhr.send(JSON.stringify({id: id}));
+    console.log("DELETE request payload: ", bookId);
+    xhr.send(JSON.stringify({id: bookId}));
     console.log("DELETE request sent.");
-
-}
-
-// Update Book
-function updateBook() {
-    var book = {
-        id: parseInt(document.getElementById('book-id').value),
-        isbn: document.getElementById('isbn').value,
-        title: document.getElementById('title').value,
-        subtitle: document.getElementById('subtitle').value,
-        genre: document.getElementById('genre-id').value,
-        authorId: parseInt(document.getElementById('author-id').value),
-        borrowReceiptId: parseInt(document.getElementById('borrow-receipt-id').value),
-        memberId: parseInt(document.getElementById('member-id').value)
-    };
-
-    fetch(`${url}/books/${book.id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(book)
-    })
-        .then(res => res.json())
-        .then(() => {
-            getBooks();
-            document.getElementById('book-form').reset();
-            document.getElementById('add-btn').style.display = 'block';
-            document.getElementById('update-btn').style.display = 'none';
-        })
-        .catch(err => console.log(err));
 }
 
 
+function updateBook(book) {
+var xhr = new XMLHttpRequest();
+xhr.open("PUT", "http://localhost:8081/LibraryFrontWeb_war_exploded/api/book/updateBook/" + book.id);
+xhr.setRequestHeader("Content-Type", "application/json");
 
+xhr.onload = function () {
+    if (xhr.status == 200) {
+        alert("Book updated successfully!");
+        location.reload();
+    } else {
+        alert("Error updating book");
+    }
+};
 
-
-
-
-
-
-
-
-
-
+xhr.send(JSON.stringify({
+    "isbn": book.isbn,
+    "title": book.title,
+    "subtitle": book.subtitle
+}));
+}
