@@ -16,6 +16,35 @@ function populateBookTable(books) {
         var subtitleCell = row.insertCell(3);
         subtitleCell.innerHTML = book.subtitle;
 
+        // Add a new column for the edit button
+        var editCell = row.insertCell(4);
+        var editButton = document.createElement("button");
+        editButton.innerHTML = "Edit";
+        editButton.onclick = (function() {
+            return function() {
+                console.log("Edit button clicked for book id: ", book.id);
+                // Show a form with the book details pre-filled
+                var editForm = document.getElementById("edit-book-form");
+                editForm.elements["id"].value = book.id;
+                editForm.elements["isbn"].value = book.isbn;
+                editForm.elements["title"].value = book.title;
+                editForm.elements["subtitle"].value = book.subtitle;
+                // Submit the form to update the book
+                editForm.onsubmit = function(event) {
+                    event.preventDefault();
+                    updateBook({
+                        "id": book.id,
+                        "isbn": editForm.elements["isbn"].value,
+                        "title": editForm.elements["title"].value,
+                        "subtitle": editForm.elements["subtitle"].value
+                    });
+                };
+                editForm.style.display = "block";
+            }
+        })(book.id);
+
+        editCell.appendChild(editButton);
+
         //Add a new column for the delete button
         var deleteCell = row.insertCell(4);
         var deleButton = document.createElement("button");
@@ -87,21 +116,41 @@ form.addEventListener("submit", function (event) {
 });
 
 function deleteBook(id) {
-    fetch(`http://localhost:8081/LibraryFrontWeb_war_exploded/api/book/deleteBook/${id}`, {
-        method: 'DELETE',
-    })
-        .then(response => {
-            if (response.ok) {
-                alert(`Book with ID ${id} deleted successfully!`);
-                location.reload();
-            } else {
-                alert(`Error deleting book with ID ${id}`);
-            }
-        })
-        .catch(error => {
-            console.error(`Error deleting book with ID ${id}:`, error);
-        });
+    var xhr = new XMLHttpRequest();
+    xhr.open("DELETE", "http://localhost:8081/LibraryFrontWeb_war_exploded/api/book/deleteBook/" + id);
+    xhr.onload = function () {
+        if (xhr.status === 200 || xhr.status === 204) {
+            alert("Book deleted successfully!");
+            location.reload();
+        } else {
+            alert("Error deleting book");
+        }
+    };
+    console.log("DELETE request URL: ", xhr.responseURL);
+    console.log("DELETE request payload: ", id);
+    xhr.send(JSON.stringify({id: id}));
+    console.log("DELETE request sent.");
+
 }
+
+function updateBook(book) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", "http://localhost:8081/LibraryFrontWeb_war_exploded/api/book/update");
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onload = function() {
+        if (xhr.status === 200 || xhr.status === 204) {
+            alert("Book updated successfully!");
+            location.reload();
+        } else {
+            alert("Error updating book");
+        }
+    };
+    xhr.send(JSON.stringify(book));
+}
+
+
+
+
 
 
 
