@@ -9,19 +9,19 @@ function populateMemberTable(members) {
         idCell.innerHTML = member.id;
 
         var firstnameCell = row.insertCell(1);
-        firstnameCell.innerHTML = member.firstname;
+        firstnameCell.innerHTML = member.firstName;
 
         var lastnameCell = row.insertCell(2);
-        lastnameCell.innerHTML = member.lastname;
+        lastnameCell.innerHTML = member.lastName;
 
         var dateofbirthCell = row.insertCell(3);
-        dateofbirthCell.innerHTML = member.dateofbirth;
+        dateofbirthCell.innerHTML = member.date_of_birth;
 
         var librarynumberCell = row.insertCell(4);
-        librarynumberCell.innerHTML = member.librarynumber;
+        librarynumberCell.innerHTML = member.library_number;
 
         var cbbidnumberCell = row.insertCell(5);
-        cbbidnumberCell.innerHTML = member.cbbidnumber;
+        cbbidnumberCell.innerHTML = member.cbb_id_number;
 
         //Add a new column for the delete button
         var deleteCell = row.insertCell(6);
@@ -35,6 +35,13 @@ function populateMemberTable(members) {
         })(member.id);
 
         deleteCell.appendChild(deleButton);
+    }
+
+    if (members.length === 0) {
+        var row = table.insertRow(0);
+        var cell = row.insertCell(0);
+        cell.colSpan = 7;
+        cell.innerHTML = "No members found";
     }
 }
 
@@ -58,11 +65,11 @@ window.onload = function() {
 
 function submitMemberForm() {
     var form = document.getElementById("member-form");
-    var firstname = document.getElementById("firstname").value;
-    var lastname = document.getElementById("lastname").value;
-    var dateofbirth = document.getElementById("dateofbirth").value;
-    var librarynumber = document.getElementById("librarynumber").value;
-    var cbbidnumber = document.getElementById("cbbidnumber").value;
+    var firstName = document.getElementById("firstname").value;
+    var lastName = document.getElementById("lastname").value;
+    var date_of_birth = document.getElementById("dateofbirth").value;
+    var library_number = document.getElementById("librarynumber").value;
+    var cbb_id_number = document.getElementById("cbbidnumber").value;
     var borrowReceipt = document.getElementById("borrow-receipt-id").value;
     var books = [{"id": document.getElementById("book-id").value}];
 
@@ -80,11 +87,11 @@ function submitMemberForm() {
     };
 
     xhr.send(JSON.stringify({
-        "firstname": firstname,
-        "lastname": lastname,
-        "dateofbirth": dateofbirth,
-        "librarynumber": librarynumber,
-        "cbbidnumber": cbbidnumber,
+        "firstName": firstName,
+        "lastName": lastName,
+        "date_of_birth": date_of_birth,
+        "library_number": library_number,
+        "cbb_id_number": cbb_id_number,
         "borrowReceipt": {"id": borrowReceipt},
         "books": books
     }));

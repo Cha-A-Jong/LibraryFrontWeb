@@ -11,50 +11,94 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <header>
-    <div class="topnav">
-        <a href="index.html">Home</a>
-        <a href="book.html">Books</a>
-        <a class="active" href="member.html">Members</a>
-        <a href="membership.html">Membership</a>
-        <a href="report.html">Reports</a>
-        <a href="about.html">About</a>
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">Library</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="book.html">Books</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="member.html">Members</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="membership.html">Membership</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="report.html">Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 </header>
 <body>
-<form id="member-form">
-    <label for="firstname">Firstname:</label><br>
-    <input type="text" id="firstname" name="firstname"><br>
-    <label for="lastname">Lastname:</label><br>
-    <input type="text" id="lastname" name="lastname"><br>
-    <label for="dateofbirth">Date of Birth:</label><br>
-    <input type="text" id="dateofbirth" name="dateofbirth"><br>
-    <label for="librarynumber">Librarynumber:</label><br>
-    <input type="text" id="librarynumber" name="librarynumber"><br>
-    <label for="cbbidnumber">CBB ID:</label><br>
-    <input type="text" id="cbbidnumber" name="cbbidnumber"><br>
-    <label for="borrow-receipt-id">Borrow Receipt ID:</label><br>
-    <input type="text" id="borrow-receipt-id" name="borrowreceipt-id"><br>
-    <label for="book-id">Book ID:</label><br>
-    <input type="text" id="book-id" name="book-id"><br><br>
-    <input type="submit" value="Submit">
-</form>
-<table id="member-table">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Date of Birth</th>
-        <th>Library Number</th>
-        <th>CBB ID Number</th>
-        <th>Action</th>
-    </tr>
-    </thead>
-    <tbody></tbody>
-</table>
-
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 mt-4">
+            <form id="member-form" class="p-3 border rounded-3">
+                <h3 class="text-center mb-3">Add New Member</h3>
+                <div class="mb-3">
+                    <label for="firstname" class="form-label">Firstname:</label>
+                    <input type="text" id="firstname" name="firstName" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="lastname" class="form-label">Lastname:</label>
+                    <input type="text" id="lastname" name="lastName" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="dateofbirth" class="form-label">Date of Birth:</label>
+                    <input type="text" id="dateofbirth" name="date_of_birth" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="librarynumber" class="form-label">Library Number:</label>
+                    <input type="text" id="librarynumber" name="library_number" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="cbbidnumber" class="form-label">CBB ID:</label>
+                    <input type="text" id="cbbidnumber" name="cbb_id_number" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="borrow-receipt-id" class="form-label">Borrow Receipt ID:</label>
+                    <input type="text" id="borrow-receipt-id" name="borrowReceipt-id" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="book-id" class="form-label">Book ID:</label>
+                    <input type="text" id="book-id" name="book-id" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <input type="submit" value="Submit" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-8">
+            <h3 class="text-center mb-3">Member List</h3>
+            <table id="member-table" class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Date of Birth</th>
+                    <th>Library Number</th>
+                    <th>CBB ID Number</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
 <script src="js/member.js"></script>
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-
-</body>
-</html>
