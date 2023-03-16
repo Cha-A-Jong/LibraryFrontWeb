@@ -27,63 +27,21 @@
         <p class="fs-5 text-muted">This is an overview of different types of memberships</p>
     </div>
 </header>
-
-    <p>
-        <input id="membershipId" class="w3-input" type="hidden" style="width:90%">
-    </p>
-
-<main>
-    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
-        <div class="col">
-            <div class="card mb-4 rounded-3 shadow-sm">
-                <div class="card-header py-3">
-                    <h4 class="my-0 fw-normal">Child</h4>
-                </div>
-                <div class="card-body">
-                    <h1 class="card-title pricing-card-title">SRD50<small class="text-muted fw-light">/mo</small></h1>
-                    <ul class="list-unstyled mt-3 mb-4">
-                        <li>For applicants aged 8 to 16</li>
-                    </ul>
-                    <button type="button" class="w-100 btn btn-lg btn-outline-primary">Add member</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card mb-4 rounded-3 shadow-sm">
-                <div class="card-header py-3">
-                    <h4 class="my-0 fw-normal">Student</h4>
-                </div>
-                <div class="card-body">
-                    <h1 class="card-title pricing-card-title">SRD75<small class="text-muted fw-light">/mo</small></h1>
-                    <ul class="list-unstyled mt-3 mb-4">
-                        <li>Full access to all books</li>
-                        <li>Limited access to E-books and Audiobooks</li>
-                    </ul>
-                    <button type="button" class="w-100 btn btn-lg btn-outline-primary">Add member</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card mb-4 rounded-3 shadow-sm">
-                <div class="card-header py-3">
-                    <h4 class="my-0 fw-normal">Individual</h4>
-                </div>
-                <div class="card-body">
-                    <h1 class="card-title pricing-card-title">SRD150<small class="text-muted fw-light">/mo</small></h1>
-                    <ul class="list-unstyled mt-3 mb-4">
-                        <li>Full access to all books, E-books and Audiobooks</li>
-                    </ul>
-                    <button type="button" class="w-100 btn btn-lg btn-outline-primary">Add member</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</main>
-
-</div>
 <body>
+<form>
+    <label for="membershipType">Membership Type:</label>
+    <select name="membershipType" id="membershipType">
+        <option value="INDIVIDUAL_MEMBERSHIP">Individual Membership</option>
+        <option value="FAMILY_MEMBERSHIP">Family Membership</option>
+        <option value="STUDENT_MEMBERSHIP">Student Membership</option>
+    </select>
+    <button type="button" onclick="getMembership()">Get Membership</button>
+</form>
+
+<div>
+    <h2>Membership Fee: <span id="fee"></span></h2>
+    <h2>Membership Privilege: <span id="privilege"></span></h2>
+</div>
 
 </body>
 </html>

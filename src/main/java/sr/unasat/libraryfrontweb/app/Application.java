@@ -7,7 +7,7 @@ public class Application {
     public static void main(String[] args) {
 
         InsertDataService insertData= new InsertDataService();
-        insertData.insertDataAllTables();
+//        insertData.insertDataAllTables();
 
 
         GenreService genreService = new GenreService();
@@ -46,7 +46,7 @@ public class Application {
 
         //Builder
         BuilderService builderService = new BuilderService();
-//        builderService.builderApp();
+        builderService.builderApp();
 
 
         JPAConfig.shutdown();

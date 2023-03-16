@@ -15,7 +15,7 @@ public class Director {
     }
 
     public void constructChildMembership(Builder builder){
-        builder.setMembershipType(MembershipType.CHILD_MEMBERSHIP);
+        builder.setMembershipType(MembershipType.FAMILY_MEMBERSHIP);
         builder.setFee(50);
         builder.setPrivilege("For applicants aged 8 to 16");
     }

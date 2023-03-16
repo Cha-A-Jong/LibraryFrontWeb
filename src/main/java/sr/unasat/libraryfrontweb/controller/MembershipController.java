@@ -2,40 +2,33 @@ package sr.unasat.libraryfrontweb.controller;
 
 import sr.unasat.libraryfrontweb.builder.Membership;
 import sr.unasat.libraryfrontweb.builder.MembershipBuilder;
-import sr.unasat.libraryfrontweb.services.MembershipService;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import sr.unasat.libraryfrontweb.builder.MembershipType;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 @Path("/memberships")
 public class MembershipController {
-
-    private MembershipService membershipService = new MembershipService();
-
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/getMembership")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createMembership(Membership membershipRequest) {
+    public Membership getMembership(@FormParam("membershipType") String membershipType) {
         MembershipBuilder builder = new MembershipBuilder();
-        builder.setMembershipType(membershipRequest.getMembershipType());
-        builder.setFee(membershipRequest.getFee());
-        builder.setPrivilege(membershipRequest.getPrivilege());
-        Membership membership = null;
-        switch (membershipRequest.getMembershipType()) {
-            case STUDENT_MEMBERSHIP:
-                membership = membershipService.createStudentMembership(builder);
-                break;
-            case INDIVIDUAL_MEMBERSHIP:
-                membership = membershipService.createIndividualMembership(builder);
-                break;
-            case CHILD_MEMBERSHIP:
-                membership = membershipService.createChildMembership(builder);
-                break;
+
+        if (membershipType.equals("INDIVIDUAL_MEMBERSHIP")) {
+            builder.setMembershipType(MembershipType.INDIVIDUAL_MEMBERSHIP);
+            builder.setFee(150);
+            builder.setPrivilege("Full access to all books, Ebooks and Audiobooks");
+        } else if (membershipType.equals("FAMILY_MEMBERSHIP")) {
+            builder.setMembershipType(MembershipType.FAMILY_MEMBERSHIP);
+            builder.setFee(250);
+            builder.setPrivilege("Full access to all books, Ebooks and Audiobooks for family members");
+        } else if (membershipType.equals("STUDENT_MEMBERSHIP")) {
+            builder.setMembershipType(MembershipType.STUDENT_MEMBERSHIP);
+            builder.setFee(75);
+            builder.setPrivilege("Access to textbooks and course materials");
         }
-        return Response.ok().entity(membership).build();
+
+        return builder.getResult();
     }
 }
+
