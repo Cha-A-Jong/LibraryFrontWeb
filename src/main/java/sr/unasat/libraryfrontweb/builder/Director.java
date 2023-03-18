@@ -14,9 +14,9 @@ public class Director {
         builder.setPrivilege("Full access to all books, Ebooks and Audiobooks");
     }
 
-    public void constructChildMembership(Builder builder){
+    public void constructFamilyMembership(Builder builder){
         builder.setMembershipType(MembershipType.FAMILY_MEMBERSHIP);
-        builder.setFee(50);
-        builder.setPrivilege("For applicants aged 8 to 16");
+        builder.setFee(300);
+        builder.setPrivilege("Full access to all books, Ebooks and Audiobooks for family members up to 6 people");
     }
 }

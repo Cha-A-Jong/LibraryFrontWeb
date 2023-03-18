@@ -35,6 +35,7 @@ public class MemberController {
     public void deleteRecordMember(Long deleteMemberRecordId){
         memberService.deleteBookRecord(deleteMemberRecordId);
     }
+
     @Path("/update")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)

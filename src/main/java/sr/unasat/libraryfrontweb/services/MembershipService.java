@@ -18,9 +18,9 @@ public class MembershipService {
         return builder.getResult();
     }
 
-    public Membership createChildMembership(MembershipBuilder builder) {
+    public Membership createFamilyMembership(MembershipBuilder builder) {
         Director director = new Director();
-        director.constructChildMembership(builder);
+        director.constructFamilyMembership(builder);
         return builder.getResult();
     }
 }
